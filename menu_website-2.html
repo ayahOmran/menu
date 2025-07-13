@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Menu</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+    }
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #333;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+    }
+    .navbar a {
+      padding: 14px 20px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .navbar a:hover {
+      background-color: #575757;
+    }
+    .section {
+      padding: 80px 20px 40px 20px;
+    }
+    .category-title {
+      font-size: 24px;
+      margin: 20px 0;
+      color: #333;
+    }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+    .tile {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .tile img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+    .tile .info {
+      padding: 10px;
+    }
+    .tile .name {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .tile .price {
+      color: green;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="#drinks">Drinks</a>
+    <a href="#salty">Salty</a>
+    <a href="#sweets">Sweets</a>
+  </div>
+
+  <div class="section" id="drinks">
+    <div class="category-title">Drinks</div>
+    <div class="menu-grid" id="drinks-list"></div>
+  </div>
+
+  <div class="section" id="salty">
+    <div class="category-title">Salty</div>
+    <div class="menu-grid" id="salty-list"></div>
+  </div>
+
+  <div class="section" id="sweets">
+    <div class="category-title">Sweets</div>
+    <div class="menu-grid" id="sweets-list"></div>
+  </div>
+
+  <script>
+    class Product {
+      constructor(image, name, price, category, visible = true) {
+        this.image = image;
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.visible = visible;
+      }
+
+      render() {
+        if (!this.visible) return null;
+
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+
+        const img = document.createElement('img');
+        img.src = this.image;
+
+        const info = document.createElement('div');
+        info.className = 'info';
+
+        const name = document.createElement('div');
+        name.className = 'name';
+        name.textContent = this.name;
+
+        const price = document.createElement('div');
+        price.className = 'price';
+        price.textContent = `$${this.price}`;
+
+        info.appendChild(name);
+        info.appendChild(price);
+        tile.appendChild(img);
+        tile.appendChild(info);
+
+        return tile;
+      }
+    }
+
+    const products = [
+      new Product('https://via.placeholder.com/150', 'Iced Coffee', 2.5, 'drinks'),
+      new Product('https://via.placeholder.com/150', 'Lemonade', 1.8, 'drinks'),
+      new Product('https://via.placeholder.com/150', 'Cheese Sandwich', 3.2, 'salty'),
+      new Product('https://via.placeholder.com/150', 'Mini Pizza', 2.9, 'salty', false),
+      new Product('https://via.placeholder.com/150', 'Chocolate Cake', 4.0, 'sweets'),
+      new Product('https://via.placeholder.com/150', 'Cookies', 2.0, 'sweets')
+    ];
+
+    const categories = {
+      drinks: document.getElementById('drinks-list'),
+      salty: document.getElementById('salty-list'),
+      sweets: document.getElementById('sweets-list')
+    };
+
+    products.forEach(product => {
+      const tile = product.render();
+      if (tile && categories[product.category]) {
+        categories[product.category].appendChild(tile);
+      }
+    });
+  </script>
+
+</body>
+</html>
