@@ -1,98 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Shop Menu</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f9f9f9;
+      background: #e9e3dc;
     }
+
     .navbar {
       position: fixed;
       top: 0;
       width: 100%;
-      background-color: #333;
+      background-color: #47240e;
       z-index: 1000;
       display: flex;
       justify-content: center;
     }
+
     .navbar a {
       padding: 14px 20px;
       color: white;
       text-decoration: none;
       font-weight: bold;
     }
+
     .navbar a:hover {
       background-color: #575757;
     }
+
     .section {
       padding: 80px 20px 40px 20px;
     }
+
     .category-title {
-      font-size: 24px;
+      font-size: 30px;
       margin: 20px 0;
-      color: #333;
+      color: #47240e;
+      text-align: center;
+      font-weight: bold;
     }
+
     .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 20px;
     }
-    .tile {
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      text-align: center;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .tile img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-    }
+
+   .tile {
+  background-color: #c4b4ae;
+  border-radius: 8px;
+  box-shadow: 0 10px 10px rgba(0,0,5,0.5);
+  text-align: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 350px; /* wider tile for landscape */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.tile img {
+  display: block;
+  width: 100%;
+  height: 290px; /* shorter height for landscape effect */
+  object-fit: cover;
+  object-position: center;
+}
+
+
     .tile .info {
       padding: 10px;
     }
+
     .tile .name {
+      color: #47240e;
       font-size: 16px;
       font-weight: bold;
     }
+
     .tile .price {
-      color: green;
-      font-size: 14px;
+      color: white;
+      font-size: 16px;
       margin-top: 5px;
+      font-weight: bold;
+    }
+
+    /* Fullscreen Preview Overlay */
+    #image-preview {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      flex-direction: column;
+    }
+
+    #image-preview img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+    }
+
+    #image-preview button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #ffffff;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
 
   <div class="navbar">
-    <a href="#drinks">Salty</a>
-    <a href="#salty">Sweets</a>
-    <a href="#sweets">Drinks</a>
+    <a href="#drinks">مشروبـات</a>
+    <a href="#sweets">سـويــت</a>
+    <a href="#salty">مـالـح</a>
   </div>
 
   <div class="section" id="salty">
-    <div class="category-title">Salty</div>
+    <div class="category-title">مــالــح</div>
     <div class="menu-grid" id="salty-list"></div>
   </div>
 
   <div class="section" id="sweets">
-    <div class="category-title">Sweets</div>
+    <div class="category-title">سـويــت</div>
     <div class="menu-grid" id="sweets-list"></div>
   </div>
 
   <div class="section" id="drinks">
-    <div class="category-title">Drinks</div>
+    <div class="category-title">مشروبـات</div>
     <div class="menu-grid" id="drinks-list"></div>
   </div>
 
-  
+  <!-- Fullscreen image preview -->
+  <div id="image-preview">
+    <img id="preview-img" src="" alt="Preview">
+    <button onclick="closePreview()">رجوع</button>
+  </div>
 
   <script>
     class Product {
@@ -122,19 +181,21 @@
 
         const price = document.createElement('div');
         price.className = 'price';
-        price.textContent = `$${this.price}`;
+        price.textContent = `BD ${this.price}`;
 
         info.appendChild(name);
         info.appendChild(price);
         tile.appendChild(img);
         tile.appendChild(info);
 
+        tile.onclick = () => openPreview(this.image);
+
         return tile;
       }
     }
 
     const products = [
-      new Product('https://via.placeholder.com/150', 'Iced Coffee', 2.5, 'drinks'),
+      new Product('images/coffee.jpeg', 'Iced Coffee', 2.5, 'drinks'),
       new Product('https://via.placeholder.com/150', 'Lemonade', 1.8, 'drinks'),
       new Product('https://via.placeholder.com/150', 'Cheese Sandwich', 3.2, 'salty'),
       new Product('https://via.placeholder.com/150', 'Mini Pizza', 2.9, 'salty', false),
@@ -154,6 +215,15 @@
         categories[product.category].appendChild(tile);
       }
     });
+
+    function openPreview(imageUrl) {
+      document.getElementById('preview-img').src = imageUrl;
+      document.getElementById('image-preview').style.display = 'flex';
+    }
+
+    function closePreview() {
+      document.getElementById('image-preview').style.display = 'none';
+    }
   </script>
 
 </body>
